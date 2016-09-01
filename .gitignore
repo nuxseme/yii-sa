@@ -27,3 +27,10 @@ phpunit.phar
 /logs
 
 .bowerrc
+# 忽略.tags
+.tags*
+# 忽略.gitignore
+.gitignore
+
+#忽略剖析日志
+Yiisa-trace

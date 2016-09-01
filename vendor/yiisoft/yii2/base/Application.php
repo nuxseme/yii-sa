@@ -194,11 +194,14 @@ abstract class Application extends Module
      */
     public function __construct($config = [])
     {
+        tracelog('执行'.__METHOD__);
+        tracelog('这里Yii::$app获取运行的应用实例');
         Yii::$app = $this;
+        tracelog(print_r($this,true));
         static::setInstance($this);
-
+        tracelog('将应用实例放到loadedModules数组');
+        tracelog(print_r($this,true));
         $this->state = self::STATE_BEGIN;
-
         $this->preInit($config);
 
         $this->registerErrorHandler($config);
@@ -216,9 +219,12 @@ abstract class Application extends Module
      */
     public function preInit(&$config)
     {
+        tracelog('执行'.__METHOD__);
+        tracelog("检测config=>id,用于区别应用，必须设置 id=>".$config['id']);
         if (!isset($config['id'])) {
             throw new InvalidConfigException('The "id" configuration for the Application is required.');
         }
+          tracelog("检测config=>basePath,用于设置应用路径，必须设置 basePath=>".$config['basePath']);
         if (isset($config['basePath'])) {
             $this->setBasePath($config['basePath']);
             unset($config['basePath']);
@@ -247,7 +253,8 @@ abstract class Application extends Module
         } elseif (!ini_get('date.timezone')) {
             $this->setTimeZone('UTC');
         }
-
+        tracelog(print_r($config['components'],true));
+        tracelog('将核心组件合并到config组件数组中,核心组件仅包含对应处理的类文件，不包含属性');
         // merge core components with custom components
         foreach ($this->coreComponents() as $id => $component) {
             if (!isset($config['components'][$id])) {
@@ -256,6 +263,7 @@ abstract class Application extends Module
                 $config['components'][$id]['class'] = $component['class'];
             }
         }
+        tracelog(print_r($config['components'],true));
     }
 
     /**

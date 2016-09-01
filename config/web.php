@@ -1,5 +1,6 @@
 <?php
-
+tracelog('web配置文件数据');
+tracelog('加载params配置文件');
 $params = require(__DIR__ . '/params.php');
 
 $config = [
@@ -38,14 +39,14 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        /*
+        
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            'enablePrettyUrl' => true,//开启url美化
+            'showScriptName' => false,//隐藏index.php脚本
             'rules' => [
             ],
         ],
-        */
+        
     ],
     'params' => $params,
 ];

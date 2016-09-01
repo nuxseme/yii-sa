@@ -55,7 +55,9 @@ abstract class ErrorHandler extends Component
      */
     public function register()
     {
+        tracelog('注册错误组件');
         ini_set('display_errors', false);
+        tracelog('接管异常');
         set_exception_handler([$this, 'handleException']);
         if (defined('HHVM_VERSION')) {
             set_error_handler([$this, 'handleHhvmError']);
@@ -65,6 +67,7 @@ abstract class ErrorHandler extends Component
         if ($this->memoryReserveSize > 0) {
             $this->_memoryReserve = str_repeat('x', $this->memoryReserveSize);
         }
+        tracelog('接管错误');
         register_shutdown_function([$this, 'handleFatalError']);
     }
 

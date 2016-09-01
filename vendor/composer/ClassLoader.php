@@ -278,6 +278,7 @@ class ClassLoader
      */
     public function register($prepend = false)
     {
+        tracelog('修改自动注册函数 loadclass');
         spl_autoload_register(array($this, 'loadClass'), true, $prepend);
     }
 
@@ -296,8 +297,10 @@ class ClassLoader
      * @return bool|null True if loaded, null otherwise
      */
     public function loadClass($class)
-    {
+    {   
+        tracelog('findFile 查找对应的文件params=>'.$class);
         if ($file = $this->findFile($class)) {
+            tracelog('include'.$file);
             includeFile($file);
 
             return true;
@@ -317,7 +320,7 @@ class ClassLoader
         if ('\\' == $class[0]) {
             $class = substr($class, 1);
         }
-
+        tracelog('在classmap中查找'.$class);
         // class map lookup
         if (isset($this->classMap[$class])) {
             return $this->classMap[$class];
@@ -343,9 +346,9 @@ class ClassLoader
 
     private function findFileWithExtension($class, $ext)
     {
+        tracelog('在psr4中查找'.$class);
         // PSR-4 lookup
         $logicalPathPsr4 = strtr($class, '\\', DIRECTORY_SEPARATOR) . $ext;
-
         $first = $class[0];
         if (isset($this->prefixLengthsPsr4[$first])) {
             foreach ($this->prefixLengthsPsr4[$first] as $prefix => $length) {
@@ -358,14 +361,14 @@ class ClassLoader
                 }
             }
         }
-
+         tracelog('在psr4 fallback中查找'.$class);
         // PSR-4 fallback dirs
         foreach ($this->fallbackDirsPsr4 as $dir) {
             if (file_exists($file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr4)) {
                 return $file;
             }
         }
-
+        tracelog('在PSR-0中查找'.$class);
         // PSR-0 lookup
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name

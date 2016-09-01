@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends Controller
+class HelloworldController extends Controller
 {
     /**
      * @inheritdoc
@@ -60,11 +60,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
-    }
-    public function actionSay(){
         echo 'hello world';
+        //return $this->render('index');
     }
+
     /**
      * Login action.
      *

@@ -138,10 +138,12 @@ class BaseYii
 
         if (isset(static::$aliases[$root])) {
             if (is_string(static::$aliases[$root])) {
+                 tracelog("返回根据别名$alias 解析的文件".static::$aliases[$root] . substr($alias, $pos));
                 return $pos === false ? static::$aliases[$root] : static::$aliases[$root] . substr($alias, $pos);
             } else {
                 foreach (static::$aliases[$root] as $name => $path) {
                     if (strpos($alias . '/', $name . '/') === 0) {
+                        tracelog("返回根据别名$alias 解析的文件".$path . substr($alias, strlen($name)));
                         return $path . substr($alias, strlen($name));
                     }
                 }
@@ -271,6 +273,7 @@ class BaseYii
      */
     public static function autoload($className)
     {
+        tracelog("到classmap查询对应的类$className,包含@则需要转换别名");
         if (isset(static::$classMap[$className])) {
             $classFile = static::$classMap[$className];
             if ($classFile[0] === '@') {
@@ -278,6 +281,7 @@ class BaseYii
             }
         } elseif (strpos($className, '\\') !== false) {
             $classFile = static::getAlias('@' . str_replace('\\', '/', $className) . '.php', false);
+            tracelog("到classmap查询不到对应的类$className,引入别名文件$classFile,这里其实是到__DIR__:".__DIR__."下查询$className.php");
             if ($classFile === false || !is_file($classFile)) {
                 return;
             }
@@ -286,8 +290,9 @@ class BaseYii
         }
 
         include($classFile);
-
+        tracelog('引入对应的类文件'.$classFile);
         if (YII_DEBUG && !class_exists($className, false) && !interface_exists($className, false) && !trait_exists($className, false)) {
+            tracelog('找不到对应的类名称'.$className);
             throw new UnknownClassException("Unable to find '$className' in file: $classFile. Namespace missing?");
         }
     }
