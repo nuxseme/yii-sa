@@ -101,7 +101,9 @@ class Object implements Configurable
      */
     public function __construct($config = [])
     {
+        tracelog(__METHOD__);
         if (!empty($config)) {
+            tracelog('配置对象属性');
             Yii::configure($this, $config);
         }
         $this->init();

@@ -445,12 +445,18 @@ class Module extends ServiceLocator
      */
     public function runAction($route, $params = [])
     {
+        tracelog(__METHOD__.'=>'.$route);
+        tracelog(print_r($params,true));
         $parts = $this->createController($route);
+        tracelog(print_r($parts,true));
         if (is_array($parts)) {
             /* @var $controller Controller */
             list($controller, $actionID) = $parts;
             $oldController = Yii::$app->controller;
             Yii::$app->controller = $controller;
+            tracelog('调用base controller 执行actionID');
+            tracelog(print_r($actionID,true));
+            tracelog(print_r($params,true));
             $result = $controller->runAction($actionID, $params);
             Yii::$app->controller = $oldController;
 
@@ -487,8 +493,9 @@ class Module extends ServiceLocator
     {
         if ($route === '') {
             $route = $this->defaultRoute;
+            tracelog(__METHOD__.'获取不到route,就是用defaultRoute=>'.$this->defaultRoute);
         }
-
+         tracelog(__METHOD__.'Route=>'.$route);
         // double slashes or leading/ending slashes may cause substr problem
         $route = trim($route, '/');
         if (strpos($route, '//') !== false) {
@@ -501,9 +508,10 @@ class Module extends ServiceLocator
             $id = $route;
             $route = '';
         }
-
+        tracelog('id=>'.$id.'   route=>'.$route);
         // module and controller map take precedence
         if (isset($this->controllerMap[$id])) {
+            tracelog('在controllerMap 中存在id=>'.$id.'  创建对象');
             $controller = Yii::createObject($this->controllerMap[$id], [$id, $this]);
             return [$controller, $route];
         }

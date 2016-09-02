@@ -76,6 +76,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
     protected function renderException($exception)
     {
         if (Yii::$app->has('response')) {
+            tracelog('获取response实例，清空数据');
             $response = Yii::$app->getResponse();
             // reset parameters of response to avoid interference with partially created response data
             // in case the error occurred while sending the response.
@@ -90,6 +91,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
         $useErrorView = $response->format === Response::FORMAT_HTML && (!YII_DEBUG || $exception instanceof UserException);
 
         if ($useErrorView && $this->errorAction !== null) {
+            tracelog('runAction'.$this->errorAction);
             $result = Yii::$app->runAction($this->errorAction);
             if ($result instanceof Response) {
                 $response = $result;
@@ -122,7 +124,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
         } else {
             $response->setStatusCode(500);
         }
-
+        tracelog('发送异常数据');
         $response->send();
     }
 

@@ -197,10 +197,10 @@ abstract class Application extends Module
         tracelog('执行'.__METHOD__);
         tracelog('这里Yii::$app获取运行的应用实例');
         Yii::$app = $this;
-        tracelog(print_r($this,true));
+        SHOW_ARR &&　tracelog(print_r($this,true));
         static::setInstance($this);
         tracelog('将应用实例放到loadedModules数组');
-        tracelog(print_r($this,true));
+        SHOW_ARR && tracelog(print_r($this,true));
         $this->state = self::STATE_BEGIN;
         $this->preInit($config);
 
@@ -253,7 +253,7 @@ abstract class Application extends Module
         } elseif (!ini_get('date.timezone')) {
             $this->setTimeZone('UTC');
         }
-        tracelog(print_r($config['components'],true));
+        SHOW_ARR && tracelog(print_r($config['components'],true));
         tracelog('将核心组件合并到config组件数组中,核心组件仅包含对应处理的类文件，不包含属性');
         // merge core components with custom components
         foreach ($this->coreComponents() as $id => $component) {
@@ -263,7 +263,7 @@ abstract class Application extends Module
                 $config['components'][$id]['class'] = $component['class'];
             }
         }
-        tracelog(print_r($config['components'],true));
+        SHOW_ARR && tracelog(print_r($config['components'],true));
     }
 
     /**
@@ -271,6 +271,7 @@ abstract class Application extends Module
      */
     public function init()
     {
+        tracelog(__METHOD__);
         $this->state = self::STATE_INIT;
         $this->bootstrap();
     }
@@ -282,10 +283,13 @@ abstract class Application extends Module
      */
     protected function bootstrap()
     {
+        tracelog(__METHOD__);
         if ($this->extensions === null) {
             $file = Yii::getAlias('@vendor/yiisoft/extensions.php');
             $this->extensions = is_file($file) ? include($file) : [];
         }
+        tracelog('加载extensions');
+        SHOW_ARR && tracelog(print_r($this->extensions,true));
         foreach ($this->extensions as $extension) {
             if (!empty($extension['alias'])) {
                 foreach ($extension['alias'] as $name => $path) {
@@ -302,7 +306,8 @@ abstract class Application extends Module
                 }
             }
         }
-
+        tracelog('加载bootstrap');
+        SHOW_ARR && tracelog(print_r($this->bootstrap,true));
         foreach ($this->bootstrap as $class) {
             $component = null;
             if (is_string($class)) {
@@ -374,18 +379,23 @@ abstract class Application extends Module
      */
     public function run()
     {
+        tracelog(__METHOD__.'正式运行!!');
         try {
 
             $this->state = self::STATE_BEFORE_REQUEST;
+            tracelog('触发请求事件之前的设定的事件');
             $this->trigger(self::EVENT_BEFORE_REQUEST);
 
             $this->state = self::STATE_HANDLING_REQUEST;
+            tracelog('处理请求resquest');
             $response = $this->handleRequest($this->getRequest());
 
             $this->state = self::STATE_AFTER_REQUEST;
+            tracelog('触发请求事件完成之后的事件');
             $this->trigger(self::EVENT_AFTER_REQUEST);
 
             $this->state = self::STATE_SENDING_RESPONSE;
+            tracelog('发送响应');
             $response->send();
 
             $this->state = self::STATE_END;

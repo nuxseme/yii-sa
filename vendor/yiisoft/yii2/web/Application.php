@@ -59,6 +59,8 @@ class Application extends \yii\base\Application
      */
     protected function bootstrap()
     {
+        tracelog(__METHOD__);
+        tracelog('获取响应组件');
         $request = $this->getRequest();
         Yii::setAlias('@webroot', dirname($request->getScriptFile()));
         Yii::setAlias('@web', $request->getBaseUrl());
@@ -74,13 +76,19 @@ class Application extends \yii\base\Application
      */
     public function handleRequest($request)
     {
+        tracelog(__METHOD__.'传入请求组件实例');
         if (empty($this->catchAll)) {
             list ($route, $params) = $request->resolve();
+            tracelog('catchAll不为空,route=>'.$route);
+            tracelog(print_r($params,true));
         } else {
             $route = $this->catchAll[0];
             $params = $this->catchAll;
             unset($params[0]);
+            tracelog('route=>'.$route);
+            tracelog(print_r($params,true));
         }
+       
         try {
             Yii::trace("Route requested: '$route'", __METHOD__);
             $this->requestedRoute = $route;

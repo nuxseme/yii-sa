@@ -89,6 +89,7 @@ abstract class ErrorHandler extends Component
      */
     public function handleException($exception)
     {
+        tracelog(__METHOD__);
         if ($exception instanceof ExitException) {
             return;
         }
