@@ -11,20 +11,23 @@ use Yii;
 
 /**
  * Component is the base class that implements the *property*, *event* and *behavior* features.
- *
+ *组件是一个基类，实现了属性 事件 行为特性
  * Component provides the *event* and *behavior* features, in addition to the *property* feature which is implemented in
  * its parent class [[Object]].
- *
+ *组件提供事件和行为特性，属性特性继承自父类
+ *事件能够将定制的代码注入到事件指定的地方
  * Event is a way to "inject" custom code into existing code at certain places. For example, a comment object can trigger
  * an "add" event when the user adds a comment. We can write custom code and attach it to this event so that when the event
  * is triggered (i.e. comment will be added), our custom code will be executed.
  *
+ * 事件通过唯一的名称区分，大小写敏感
  * An event is identified by a name that should be unique within the class it is defined at. Event names are *case-sensitive*.
- *
+ *一个或者多个php回调函数别称为事件句柄
  * One or multiple PHP callbacks, called *event handlers*, can be attached to an event. You can call [[trigger()]] to
  * raise an event. When an event is raised, the event handlers will be invoked automatically in the order they were
  * attached.
- *
+ *调用trigger()触发事件，当一个事件被触发，事件句柄会自动被唤醒按它们被绑定的顺序
+ * 绑定一个事件可以使用on()方法
  * To attach an event handler to an event, call [[on()]]:
  *
  * ```php
@@ -32,17 +35,17 @@ use Yii;
  *     // send email notification
  * });
  * ```
- *
+ *匿名函数绑定到update事件
  * In the above, an anonymous function is attached to the "update" event of the post. You may attach
  * the following types of event handlers:
  *
- * - anonymous function: `function ($event) { ... }`
- * - object method: `[$object, 'handleAdd']`
- * - static class method: `['Page', 'handleAdd']`
- * - global function: `'handleAdd'`
+ * - anonymous function: `function ($event) { ... }`匿名函数
+ * - object method: `[$object, 'handleAdd']`对象方法
+ * - static class method: `['Page', 'handleAdd']`静态方法
+ * - global function: `'handleAdd'`全局函数
  *
  * The signature of an event handler should be like the following:
- *
+ *事件句柄的信号应该是$event
  * ```php
  * function foo($event)
  * ```
@@ -51,7 +54,7 @@ use Yii;
  *
  * You can also attach a handler to an event when configuring a component with a configuration array.
  * The syntax is like the following:
- *
+ *也可以在配置阶段绑定事件
  * ```php
  * [
  *     'on add' => function ($event) { ... }
@@ -62,20 +65,23 @@ use Yii;
  *
  * Sometimes, you may want to associate extra data with an event handler when you attach it to an event
  * and then access it when the handler is invoked. You may do so by
- *
+ * on 第三个参数传递额外数据
  * ```php
  * $post->on('update', function ($event) {
  *     // the data can be accessed via $event->data
  * }, $data);
  * ```
- *
+ *行为是一个Behavior的实例或者子类，组件可以绑定一个或者多个行为。行为被绑定到组件上之后，它的属性和方法可以通过组件直接获取就好像组件拥有这些属性和方法
  * A behavior is an instance of [[Behavior]] or its child class. A component can be attached with one or multiple
  * behaviors. When a behavior is attached to a component, its public properties and methods can be accessed via the
  * component directly, as if the component owns those properties and methods.
  *
+ * 通过在behaviors()申明或者直接调用attachBehavior()绑定行为到组件上
  * To attach a behavior to a component, declare it in [[behaviors()]], or explicitly call [[attachBehavior]]. Behaviors
+ * 在behaviors申明的行为将自动绑定到相匹配的组件上
  * declared in [[behaviors()]] are automatically attached to the corresponding component.
  *
+ * 亦可以在配置阶段配置组件的行为，语法如下：
  * One can also attach a behavior to a component when configuring it with a configuration array. The syntax is like the
  * following:
  *
@@ -86,7 +92,7 @@ use Yii;
  *     ],
  * ]
  * ```
- *
+ *绑定行为时，通过Yii::createObject()创建行为对象
  * where `as tree` stands for attaching a behavior named `tree`, and the array will be passed to [[\Yii::createObject()]]
  * to create the behavior object.
  *
@@ -109,9 +115,11 @@ class Component extends Object
 
     /**
      * Returns the value of a component property.
+     * 返回组件的属性值，该方法会按如下方式顺序检测，先到先得
      * This method will check in the following order and act accordingly:
-     *
+     *   通过getter获取
      *  - a property defined by a getter: return the getter result
+     *  通过行为的属性获取
      *  - a property of a behavior: return the behavior property value
      *
      * Do not call this method directly as it is a PHP magic method that
@@ -146,11 +154,15 @@ class Component extends Object
 
     /**
      * Sets the value of a component property.
+     * 设置组件属性值，按顺序设定
      * This method will check in the following order and act accordingly:
-     *
+     *  setter
      *  - a property defined by a setter: set the property value
+     *  形如'on xyz' 将会绑定事件
      *  - an event in the format of "on xyz": attach the handler to the event "xyz"
+     * 形如'as xyz' 将会绑定行为
      *  - a behavior in the format of "as xyz": attach the behavior named as "xyz"
+     * 设定行为属性
      *  - a property of a behavior: set the behavior property value
      *
      * Do not call this method directly as it is a PHP magic method that
@@ -199,10 +211,12 @@ class Component extends Object
     }
 
     /**
+     * 检测一个属性是否设置
      * Checks if a property is set, i.e. defined and not null.
      * This method will check in the following order and act accordingly:
-     *
+     *  检测setter
      *  - a property defined by a setter: return whether the property is set
+     * 检测行为
      *  - a property of a behavior: return whether the property is set
      *  - return `false` for non existing properties
      *

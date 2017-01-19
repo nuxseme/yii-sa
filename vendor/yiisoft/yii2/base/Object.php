@@ -11,9 +11,12 @@ use Yii;
 
 /**
  * Object is the base class that implements the *property* feature.
+ * Object是一个实现了 属性 特性的基类
  *
+ * 一个属性通过getter setter定义
  * A property is defined by a getter method (e.g. `getLabel`), and/or a setter method (e.g. `setLabel`). For example,
  * the following getter and setter methods define a property named `label`:
+ *
  *
  * ```php
  * private $_label;
@@ -29,8 +32,9 @@ use Yii;
  * }
  * ```
  *
+ * 属性名不分大小写
  * Property names are *case-insensitive*.
- *
+ *属性可以看成是对象的成员变量，通过getter setter节点获取或者设置属性
  * A property can be accessed like a member variable of an object. Reading or writing a property will cause the invocation
  * of the corresponding getter or setter method. For example,
  *
@@ -40,23 +44,28 @@ use Yii;
  * // equivalent to $object->setLabel('abc');
  * $object->label = 'abc';
  * ```
- *
+ *如果一个属性只有getter 表明这个属性只读，尝试修改这个属性会抛出异常
  * If a property has only a getter method and has no setter method, it is considered as *read-only*. In this case, trying
  * to modify the property value will cause an exception.
- *
+ *可以调用hasProperty 或者 canGetProperty canSetProperty 来校验一个属性是否存在
  * One can call [[hasProperty()]], [[canGetProperty()]] and/or [[canSetProperty()]] to check the existence of a property.
- *
+ *除了属性特性之外，对象引进了重要的对象初始化生命周期。特别的，创建一个新的对象实例或者派生类将会循环如下生命周期
  * Besides the property feature, Object also introduces an important object initialization life cycle. In particular,
  * creating an new instance of Object or its derived class will involve the following life cycles sequentially:
  *
  * 1. the class constructor is invoked;
+ * 类的构造函数被唤醒
  * 2. object properties are initialized according to the given configuration;
+ * 根据给定的配置初始化对象属性
  * 3. the `init()` method is invoked.
+ *init方法被唤醒
  *
+ * 上面的第2步和第3步发生在类的构造函数结束之后，建议对象的初始阶段在init()执行，在那个阶段对象的配置已经完成
  * In the above, both Step 2 and 3 occur at the end of the class constructor. It is recommended that
  * you perform object initialization in the `init()` method because at that stage, the object configuration
  * is already applied.
  *
+ * 为了确保上诉生命周期，如果一个Object的子类需要重写构造函数应该如下：
  * In order to ensure the above life cycles, if a child class of Object needs to override the constructor,
  * it should be done like the following:
  *
@@ -67,10 +76,10 @@ use Yii;
  *     parent::__construct($config);
  * }
  * ```
- *
+ *$config 默认为空数组，应该在最后一个参数被声明
  * That is, a `$config` parameter (defaults to `[]`) should be declared as the last parameter
  * of the constructor, and the parent implementation should be called at the end of the constructor.
- *
+ *父类的构造函数最后也要传递$config
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
@@ -87,13 +96,14 @@ class Object implements Configurable
 
     /**
      * Constructor.
+     * 构造函数 默认执行如下2件事
      * The default implementation does two things:
-     *
+     *根据给定的$config 初始化配置
      * - Initializes the object with the given configuration `$config`.
      * - Call [[init()]].
-     *
+     *调用init函数
      * If this method is overridden in a child class, it is recommended that
-     *
+     *如果该方法被重写，建议构造函数的最后一个值是一个$config的数组，父类的构造函数最后传递$config
      * - the last parameter of the constructor is a configuration array, like `$config` here.
      * - call the parent implementation at the end of the constructor.
      *
@@ -111,6 +121,8 @@ class Object implements Configurable
 
     /**
      * Initializes the object.
+     * 对象初始化
+     * 对象构造函数结束之后唤醒初始化方法
      * This method is invoked at the end of the constructor after the object is initialized with the
      * given configuration.
      */
@@ -119,6 +131,7 @@ class Object implements Configurable
     }
 
     /**
+     * 返回对象属性值
      * Returns the value of an object property.
      *
      * Do not call this method directly as it is a PHP magic method that
@@ -142,6 +155,7 @@ class Object implements Configurable
     }
 
     /**
+     * 设置对象属性值
      * Sets value of an object property.
      *
      * Do not call this method directly as it is a PHP magic method that

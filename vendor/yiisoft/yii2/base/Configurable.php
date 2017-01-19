@@ -26,6 +26,14 @@ namespace yii\base;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0.3
  */
+/**
+ * configure 是一个接口，那些支持配置项的class需要实现这个接口
+ * class的构造函数的最后一个参数应该接受一个包含配置的数组
+ *
+ * Interface Configurable
+ * @package yii\base
+ */
 interface Configurable
 {
+    //可配置的 what?
 }

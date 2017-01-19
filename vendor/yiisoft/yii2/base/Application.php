@@ -10,33 +10,52 @@ namespace yii\base;
 use Yii;
 
 /**
+ * application 是所有应用的基类
  * Application is the base class for all application classes.
- *
+ *资源管理组件
  * @property \yii\web\AssetManager $assetManager The asset manager application component. This property is
  * read-only.
+ * 认证管理组件
  * @property \yii\rbac\ManagerInterface $authManager The auth manager application component. Null is returned
  * if auth manager is not configured. This property is read-only.
+ * 应用根目录
  * @property string $basePath The root directory of the application.
+ * 缓存组件
  * @property \yii\caching\Cache $cache The cache application component. Null if the component is not enabled.
  * This property is read-only.
+ * 数据库连接组件
  * @property \yii\db\Connection $db The database connection. This property is read-only.
+ * 错误句柄组件
  * @property \yii\web\ErrorHandler|\yii\console\ErrorHandler $errorHandler The error handler application
  * component. This property is read-only.
+ * 格式组件
  * @property \yii\i18n\Formatter $formatter The formatter application component. This property is read-only.
+ * 多语言组件
  * @property \yii\i18n\I18N $i18n The internationalization application component. This property is read-only.
+ * 调度器组件
  * @property \yii\log\Dispatcher $log The log dispatcher application component. This property is read-only.
+ * 邮件接口
  * @property \yii\mail\MailerInterface $mailer The mailer application component. This property is read-only.
+ * 请求处理组件
  * @property \yii\web\Request|\yii\console\Request $request The request component. This property is read-only.
+ * 响应组件
  * @property \yii\web\Response|\yii\console\Response $response The response component. This property is
  * read-only.
+ * 运行时路径
  * @property string $runtimePath The directory that stores runtime files. Defaults to the "runtime"
  * subdirectory under [[basePath]].
+ * 安全组件
  * @property \yii\base\Security $security The security application component. This property is read-only.
+ * 时区
  * @property string $timeZone The time zone used by this application.
+ * 模块标识
  * @property string $uniqueId The unique ID of the module. This property is read-only.
+ * Url管理器
  * @property \yii\web\UrlManager $urlManager The URL manager for this application. This property is read-only.
+ * 第三方扩展组件
  * @property string $vendorPath The directory that stores vendor files. Defaults to "vendor" directory under
  * [[basePath]].
+ * 视图组件
  * @property View|\yii\web\View $view The view application component that is used to render various view
  * files. This property is read-only.
  *
@@ -116,27 +135,33 @@ abstract class Application extends Module
      */
     public $sourceLanguage = 'en-US';
     /**
+     * 当前控制器实例
      * @var Controller the currently active controller instance
      */
     public $controller;
     /**
+     * 布局渲染默认main文件
      * @var string|boolean the layout that should be applied for views in this application. Defaults to 'main'.
      * If this is false, layout will be disabled.
      */
     public $layout = 'main';
     /**
+     * 请求路由
      * @var string the requested route
      */
     public $requestedRoute;
     /**
+     * 请求方法
      * @var Action the requested Action. If null, it means the request cannot be resolved into an action.
      */
     public $requestedAction;
     /**
+     * 请求参数
      * @var array the parameters supplied to the requested action.
      */
     public $requestedParams;
     /**
+     * Yii扩展数组
      * @var array list of installed Yii extensions. Each array element represents a single extension
      * with the following structure:
      *
@@ -161,6 +186,7 @@ abstract class Application extends Module
      */
     public $extensions;
     /**
+     * 在应用处理bootstrapping process 期间运行的组件
      * @var array list of components that should be run during the application [[bootstrap()|bootstrapping process]].
      *
      * Each component may be specified in one of the following formats:
@@ -190,6 +216,7 @@ abstract class Application extends Module
      * Constructor.
      * @param array $config name-value pairs that will be used to initialize the object properties.
      * Note that the configuration must contain both [[id]] and [[basePath]].
+     * 配置文件需要配置id和basePath
      * @throws InvalidConfigException if either [[id]] or [[basePath]] configuration is missing.
      */
     public function __construct($config = [])
@@ -197,13 +224,13 @@ abstract class Application extends Module
         tracelog('执行'.__METHOD__);
         tracelog('这里Yii::$app获取运行的应用实例');
         Yii::$app = $this;
-        SHOW_ARR &&　tracelog(print_r($this,true));
+        SHOW_ARR && tracelog(print_r($this,true));
         static::setInstance($this);
         tracelog('将应用实例放到loadedModules数组');
         SHOW_ARR && tracelog(print_r($this,true));
         $this->state = self::STATE_BEGIN;
         $this->preInit($config);
-
+        //应用基础 注册错误处理器
         $this->registerErrorHandler($config);
 
         Component::__construct($config);
@@ -211,6 +238,8 @@ abstract class Application extends Module
 
     /**
      * Pre-initializes the application.
+     * 预处理 应用
+     * 在应用构造函数初始阶段被调用
      * This method is called at the beginning of the application constructor.
      * It initializes several important application properties.
      * If you override this method, please make sure you call the parent implementation.

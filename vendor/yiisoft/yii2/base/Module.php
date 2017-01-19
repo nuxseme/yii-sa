@@ -11,25 +11,33 @@ use Yii;
 use yii\di\ServiceLocator;
 
 /**
+ * Module 是module和application的基类
  * Module is the base class for module and application classes.
  *
+ * 一个模块表示一个包含MVC结构的子应用，比如前台后台模块，第三方模块拥有自己的MVC
  * A module represents a sub-application which contains MVC elements by itself, such as
  * models, views, controllers, etc.
- *
+ *一个模块可能包含其他的模块，子模块
  * A module may consist of [[modules|sub-modules]].
  *
+ * 组件可以注册到模块上，这样在模块的内部就能全局的使用组件
  * [[components|Components]] may be registered with the module so that they are globally
  * accessible within the module.
- *
+ * //别名配置
  * @property array $aliases List of path aliases to be defined. The array keys are alias names (must start
  * with '@') and the array values are the corresponding paths or aliases. See [[setAliases()]] for an example.
  * This property is write-only.
+ * 模块根路径
  * @property string $basePath The root directory of the module.
+ * 模块控制器路径
  * @property string $controllerPath The directory that contains the controller classes. This property is
  * read-only.
+ * 模块视图布局路径
  * @property string $layoutPath The root directory of layout files. Defaults to "[[viewPath]]/layouts".
  * @property array $modules The modules (indexed by their IDs).
+ * 模块唯一标示
  * @property string $uniqueId The unique ID of the module. This property is read-only.
+ * 模块视图路径
  * @property string $viewPath The root directory of view files. Defaults to "[[basePath]]/views".
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
