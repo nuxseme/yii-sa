@@ -179,7 +179,6 @@ class Component extends Object
         if (method_exists($this, $setter)) {
             // set property
             $this->$setter($value);
-
             return;
         } elseif (strncmp($name, 'on ', 3) === 0) {
             // on event: attach event handler

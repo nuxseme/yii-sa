@@ -254,6 +254,8 @@ class ServiceLocator extends Component
      */
     public function setComponents($components)
     {
+        tracelog('find it');
+        tracelog(print_r($components,true));
         foreach ($components as $id => $component) {
             $this->set($id, $component);
         }

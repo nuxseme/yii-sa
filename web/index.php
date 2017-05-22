@@ -1,6 +1,6 @@
 <?php
 require(__DIR__.'/../sword.php');
-defined('SHOW_ARR') or define('SHOW_ARR', false);
+defined('SHOW_ARR') or define('SHOW_ARR', true);
 deleteLogs();
 tracelog('Yiisa begin');
 SHOW_ARR && tracelog(print_r($_SERVER,true));

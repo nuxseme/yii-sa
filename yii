@@ -7,7 +7,8 @@
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
-
+require(__DIR__.'/sword.php');
+defined('SHOW_ARR') or define('SHOW_ARR', false);
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 

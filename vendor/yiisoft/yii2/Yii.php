@@ -27,7 +27,7 @@ tracelog('BaseYii.php 设置static _logger 用于保存log实例');
 class Yii extends \yii\BaseYii
 {
 }
-tracelog('修改自动注册函数为Yii::autoload');
+tracelog('添加自动注册函数为Yii::autoload');
 spl_autoload_register(['Yii', 'autoload'], true, true);
 Yii::$classMap = require(__DIR__ . '/classes.php');
 tracelog('Yii框架预加载类到classMap');

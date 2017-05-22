@@ -522,13 +522,9 @@ class BaseYii
      */
     public static function configure($object, $properties)
     {
-        tracelog(__METHOD__.'配置对象属性');
-        SHOW_ARR && tracelog(print_r($properties,true));
-        SHOW_ARR && tracelog(print_r($object,true));
         foreach ($properties as $name => $value) {
             $object->$name = $value;
         }
-         SHOW_ARR && tracelog(print_r($object,true));
         return $object;
     }
 

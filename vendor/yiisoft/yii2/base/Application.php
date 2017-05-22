@@ -226,14 +226,12 @@ abstract class Application extends Module
         Yii::$app = $this;
         SHOW_ARR && tracelog(print_r($this,true));
         static::setInstance($this);
-        tracelog('将应用实例放到loadedModules数组');
-        SHOW_ARR && tracelog(print_r($this,true));
         $this->state = self::STATE_BEGIN;
         $this->preInit($config);
         //应用基础 注册错误处理器
         $this->registerErrorHandler($config);
-
         Component::__construct($config);
+        SHOW_ARR && tracelog(print_r($this,true));
     }
 
     /**

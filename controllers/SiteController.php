@@ -63,7 +63,10 @@ class SiteController extends Controller
         return $this->render('index');
     }
     public function actionSay(){
-        echo 'hello world';
+        //echo 'hello world';
+        //return $this->render('say',['message' => 'hello reder']);
+        //return $this->renderContent('say');
+        return $this->renderPartial('say',['message' => 'hello render']);
     }
     /**
      * Login action.
@@ -124,4 +127,6 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+
 }
